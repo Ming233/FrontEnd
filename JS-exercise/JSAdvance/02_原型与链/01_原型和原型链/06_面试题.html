@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>06_面试题</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      /*
+  测试题1
+   */
+      function A() {}
+      A.prototype.n = 1;
+
+      var b = new A();
+
+      A.prototype = {
+        n: 2,
+        m: 3,
+      };
+
+      var c = new A();
+      console.log("测试题1:" + b.n, b.m, c.n, c.m);
+
+      A.prototype.n = 3;
+
+      console.log("测试题1.1:" + b.n, b.m, c.n, c.m);
+
+      /*
+   测试题2
+   */
+      function F() {}
+      Object.prototype.a = function () {
+        console.log("a()");
+      };
+      // Object1.prototype.a = function () {
+      //   console.log("a()");
+      // };
+      Function.prototype.b = function () {
+        console.log("b()");
+      };
+      // Function1.prototype.b = function () {
+      //   console.log("c()");
+      // };
+
+      var f = new F();
+      f.a();
+      // f.b() //这个是找不到的，因为它是隐性
+      F.a();
+      F.b();
+      console.log("测试题2");
+      console.log(f); //native code
+      console.log(Object.prototype);
+      console.log(Function.prototype);
+      // console.log(Function1.prototype);
+    </script>
+  </body>
+</html>

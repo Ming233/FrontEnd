@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style type="text/css">
+      #box1 {
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        position: absolute;
+      }
+
+      #box2 {
+        width: 100px;
+        height: 100px;
+        background-color: yellow;
+        position: absolute;
+
+        left: 200px;
+        top: 200px;
+      }
+    </style>
+
+    <script type="text/javascript">
+      window.onload = function () {
+        /*
+         * 拖拽box1元素
+         *  - 拖拽的流程
+         * 		1.当鼠标在被拖拽元素上按下时，开始拖拽  onmousedown
+         * 		2.当鼠标移动时被拖拽元素跟随鼠标移动 onmousemove
+         * 		3.当鼠标松开时，被拖拽元素固定在当前位置	onmouseup
+         */
+
+        //获取box1
+        var box1 = document.getElementById("box1");
+        var box2 = document.getElementById("box2");
+        var img1 = document.getElementById("img1");
+
+        //开启box1的拖拽
+        drag(box1);
+        //开启box2的
+        drag(box2);
+
+        drag(img1);
+
+        box1.onmousewheel = function (event) {
+          event = event || window.event;
+
+          //event.wheelDelta 可以获取鼠标滚轮滚动的方向
+          //向上滚 120   向下滚 -120
+          //wheelDelta这个值我们不看大小，只看正负
+
+          //alert(event.wheelDelta);
+
+          //wheelDelta这个属性火狐中不支持
+          //在火狐中使用event.detail来获取滚动的方向
+          //向上滚 -3  向下滚 3
+          //alert(event.detail);
+
+          /*
+           * 当鼠标滚轮向下滚动时，box1变长
+           * 	当滚轮向上滚动时，box1变短
+           */
+          //判断鼠标滚轮滚动的方向
+          if (event.wheelDelta > 0 || event.detail < 0) {
+            //向上滚，box1变短
+            box1.style.height = box1.clientHeight - 10 + "px";
+          } else {
+            //向下滚，box1变长
+            box1.style.height = box1.clientHeight + 10 + "px";
+          }
+
+          /*
+           * 使用addEventListener()方法绑定响应函数，取消默认行为时不能使用return false
+           * 需要使用event来取消默认行为event.preventDefault();
+           * 但是IE8不支持event.preventDefault();这个玩意，如果直接调用会报错
+           */
+          event.preventDefault && event.preventDefault();
+
+          /*
+           * 当滚轮滚动时，如果浏览器有滚动条，滚动条会随之滚动，
+           * 这是浏览器的默认行为，如果不希望发生，则可以取消默认行为
+           */
+          return false;
+        };
+
+        bind(box1, "DOMMouseScroll", box1.onmousewheel);
+
+        //按下上下左右即可移动黄色方块
+        document.onkeydown = function (event) {
+          event = event || window.event;
+
+          //定义一个变量，来表示移动的速度
+          var speed = 10;
+
+          //当用户按了ctrl以后，速度加快
+          if (event.ctrlKey) {
+            speed = 500;
+          }
+
+          /*
+           * 37 左
+           * 38 上
+           * 39 右
+           * 40 下
+           */
+          switch (event.keyCode) {
+            case 37:
+              //alert("向左"); left值减小
+              box2.style.left = box2.offsetLeft - speed + "px";
+              break;
+            case 39:
+              //alert("向右");
+              box2.style.left = box2.offsetLeft + speed + "px";
+              break;
+            case 38:
+              //alert("向上");
+              box2.style.top = box2.offsetTop - speed + "px";
+              break;
+            case 40:
+              //alert("向下");
+              box2.style.top = box2.offsetTop + speed + "px";
+              break;
+          }
+        };
+      };
+
+      /*
+       * 提取一个专门用来设置拖拽的函数
+       * 参数：开启拖拽的元素
+       */
+      function drag(obj) {
+        //当鼠标在被拖拽元素上按下时，开始拖拽  onmousedown
+        obj.onmousedown = function (event) {
+          //设置box1捕获所有鼠标按下的事件
+          /*
+           * setCapture()
+           * 	- 只有IE支持，但是在火狐中调用时不会报错，
+           * 		而如果使用chrome调用，会报错
+           */
+          /*if(box1.setCapture){
+						box1.setCapture();
+					}*/
+          obj.setCapture && obj.setCapture();
+
+          event = event || window.event;
+          //div的偏移量 鼠标.clentX - 元素.offsetLeft
+          //div的偏移量 鼠标.clentY - 元素.offsetTop
+          var ol = event.clientX - obj.offsetLeft;
+          var ot = event.clientY - obj.offsetTop;
+
+          //为document绑定一个onmousemove事件
+          document.onmousemove = function (event) {
+            event = event || window.event;
+            //当鼠标移动时被拖拽元素跟随鼠标移动 onmousemove
+            //获取鼠标的坐标
+            var left = event.clientX - ol;
+            var top = event.clientY - ot;
+
+            //修改box1的位置
+            obj.style.left = left + "px";
+            obj.style.top = top + "px";
+          };
+
+          //为document绑定一个鼠标松开事件
+          document.onmouseup = function () {
+            //当鼠标松开时，被拖拽元素固定在当前位置	onmouseup
+            //取消document的onmousemove事件
+            document.onmousemove = null;
+            //取消document的onmouseup事件
+            document.onmouseup = null;
+            //当鼠标松开时，取消对事件的捕获
+            obj.releaseCapture && obj.releaseCapture();
+          };
+
+          /*
+           * 当我们拖拽一个网页中的内容时，浏览器会默认去搜索引擎中搜索内容，
+           * 	此时会导致拖拽功能的异常，这个是浏览器提供的默认行为，
+           * 	如果不希望发生这个行为，则可以通过return false来取消默认行为
+           *
+           * 但是这招对IE8不起作用
+           */
+          return false;
+        };
+      }
+
+      function bind(obj, eventStr, callback) {
+        if (obj.addEventListener) {
+          //大部分浏览器兼容的方式
+          obj.addEventListener(eventStr, callback, false);
+        } else {
+          /*
+           * this是谁由调用方式决定
+           * callback.call(obj)
+           */
+          //IE8及以下
+          obj.attachEvent("on" + eventStr, function () {
+            //在匿名函数中调用回调函数
+            callback.call(obj);
+          });
+        }
+      }
+    </script>
+  </head>
+  <body style="height: 2000px">
+    按下上下左右即可移动黄色方块
+
+    <div id="box1"></div>
+
+    <div id="box2"></div>
+
+    <img src="img/an.jpg" id="img1" style="position: absolute" />
+  </body>
+</html>
