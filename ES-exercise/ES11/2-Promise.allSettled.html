@@ -10,23 +10,25 @@
         //声明两个promise对象
         const p1 = new Promise((resolve, reject)=>{
             setTimeout(()=>{
-                resolve('商品数据 - 1');
+                // resolve('商品数据 - 1');
+                reject('商品数据 - 1 出错啦!');
             },1000)
         });
 
         const p2 = new Promise((resolve, reject)=>{
             setTimeout(()=>{
-                resolve('商品数据 - 2');
-                // reject('出错啦!');
+                // resolve('商品数据 - 2');
+                reject('商品数据 - 2 出错啦!');
             },1000)
         });
 
-        //调用 allsettled 方法
-        // const result = Promise.allSettled([p1, p2]);
+        //调用 allsettled 方法，始终会返回成功，即使期中一个失败
+        const result = Promise.allSettled([p1, p2]);
         
-        // const res = Promise.all([p1, p2]);
+        //必须要全部成功才能回复成功状态
+        // const result = Promise.all([p1, p2]);
 
-        console.log(res);
+        console.log(result);
 
     </script>
 </body>
