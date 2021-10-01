@@ -53,7 +53,7 @@
 //    "checkJs": true,
     // 是否移除注释
     "removeComments": true,
-    // 不生成编译后的文件
+    // 不生成编译后的文件。原因：只想用TSC的检查功能
     "noEmit": false,
 
 

@@ -128,4 +128,7 @@ class Snake{
     }
 }
 
+// let mySnake = new Snake();
+// mySnake.checkHeadBody();
+
 export default Snake;
