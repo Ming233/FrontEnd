@@ -31,14 +31,34 @@
 								}
 							}
 						}
+
+						
+					//简化 sum(y)
+					sum(y) = x => y => z =>x+y+z
 					*/
 		//#endregion
 		//创建组件
 		class Login extends React.Component{
+			//测试柯里化函数
+			
+			sum = (x)=>{
+				console.log('@1',x);
+				// y在这里还没define
+				// console.log('@1',y);
+				return (y)=>{
+				console.log('@2',y);
+					return (z)=>{
+						console.log(x+y+z);
+						// this.setState({mySum:x+y+z});
+					}
+				}
+			}
+
 			//初始化状态
 			state = {
 				username:'', //用户名
-				password:'' //密码
+				password:'', //密码
+				mySum:0
 			}
 
 			//保存表单数据到状态中
@@ -56,11 +76,15 @@
 			}
 			render(){
 				return(
-					<form onSubmit={this.handleSubmit}>
-						用户名：<input onChange={this.saveFormData('username')} type="text" name="username"/>
-						密码：<input onChange={this.saveFormData('password')} type="password" name="password"/>
-						<button>登录</button>
-					</form>
+					<div>
+						<form onSubmit={this.handleSubmit}>
+							用户名：<input onChange={this.saveFormData('username')} type="text" name="username"/>
+							密码：<input onChange={this.saveFormData('password')} type="password" name="password"/>
+							<button>登录</button>
+						</form>
+						{/*函数柯里化后的使用方法*/}
+						<button onClick={this.sum(1)(2)(3)}>HIT ME</button>
+					</div>
 				)
 			}
 		}
