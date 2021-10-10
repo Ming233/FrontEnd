@@ -23,13 +23,30 @@
 			state = {opacity:1}
 
 			death = ()=>{
+				// 这样可以先清楚时间ID，再卸载
+				// clearInterval(this.timer);
 				//卸载组件
 				ReactDOM.unmountComponentAtNode(document.getElementById('test'))
 			}
 
-			//组件挂完毕
+			//组件挂完毕 => 直接开始调用一次
+			//在这里，我们直接放了个时间在里面
 			componentDidMount(){
 				console.log('componentDidMount');
+				this.timer = setInterval(() => {
+					//获取原状态
+					let {opacity} = this.state
+					//减小0.1
+					opacity -= 0.1
+					if(opacity <= 0) opacity = 1
+					//设置新的透明度
+					this.setState({opacity})
+				}, 200);
+			}
+
+			
+			action = () => {
+				console.log('开始变化');
 				this.timer = setInterval(() => {
 					//获取原状态
 					let {opacity} = this.state
@@ -54,6 +71,7 @@
 					<div>
 						<h2 style={{opacity:this.state.opacity}}>React学不会怎么办？</h2>
 						<button onClick={this.death}>不活了</button>
+						<button onClick={this.action}>开始变化</button>
 					</div>
 				)
 			}
