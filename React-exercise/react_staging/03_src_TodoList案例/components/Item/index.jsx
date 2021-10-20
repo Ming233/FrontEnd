@@ -12,14 +12,14 @@ export default class Item extends Component {
 		}
 	}
 
-	//勾选、取消勾选某一个todo的回调
+	//勾选、取消勾选某一个todo的回调 ==> 高阶，柯里化
 	handleCheck = (id)=>{
 		return (event)=>{
 			this.props.updateTodo(id,event.target.checked)
 		}
 	}
 
-	//删除一个todo的回调
+	//删除一个todo的回调 ==> 非高阶，但是在文件里面需要写回调形式。例子：()=>this.handlexxx(id)
 	handleDelete = (id)=>{
 		if(window.confirm('确定删除吗？')){
 			this.props.deleteTodo(id)
