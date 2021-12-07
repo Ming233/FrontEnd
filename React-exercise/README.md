@@ -1,5 +1,7 @@
 # react难点总结
 
+## 
+
 ## 难点一：柯里化
 11-1 柯里化的操作比较麻烦，需注意一下。 [柯里化例子](./react_basic/11_高阶函数_函数柯里化/1_高阶函数_函数柯里化.html)
 
@@ -66,6 +68,8 @@
     <button onClick={()=> this.handleDelete(id) }>Delete</button>
    ```
 
+    
+   ```
 更多例子
     //原来模样（柯里化）:
     用户名：<input onChange={this.saveFormData('username')} type="text" name="username"/>
@@ -79,7 +83,38 @@
    ```
 
 
-难点3： [react的生命周期](./react_basic/12_组件的生命周期/2_react生命周期(旧).png)
+## 难点3： [react的生命周期](./react_basic/12_组件的生命周期/2_react生命周期(旧).png)
+
+## 难点4： [router的基石](./react_staging/08_src_路由的基本使用/前端路由的基石_history.html)
+REACT-ROUTER-DOM就是基于这个原理，开发出来给SPA使用
+
+## 难点5：[渲染props] (./React-exercise/react_extension/src/components/7_renderProps/index.jsx)
+通过在组件中传入render这，可以给组件A传入B组件
+				<A render={()=><B/>}/>
+这样写，可以B组件传入PROPS
+				<A render={(name)=><B name={name}/>}/>
+                优势在于，A组件，可以提前预留一个RENDER，但是不知道这个预留的RENDER将来会是什么。（例如C,D,E,F都行）
+
+## 组件通信方式总结
+
+#### 方式：
+
+		props：
+			(1).children props
+			(2).render props
+		消息订阅-发布：
+			pubs-sub、event等等
+		集中式管理：
+			redux、dva等等
+		conText:
+			生产者-消费者模式
+
+#### 组件间的关系
+
+		父子组件：props
+		兄弟组件(非嵌套组件)：消息订阅-发布、集中式管理
+		祖孙组件(跨级组件)：消息订阅-发布、集中式管理、conText(用的少)
+
 
 [代码模板](./react_staging/02_src_hello_react/components/TestReact/Test.jsx)
 RCC
